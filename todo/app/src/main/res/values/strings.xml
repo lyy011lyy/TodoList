@@ -3,4 +3,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="doneButton">Done</string>
+    <string name="newText">New Text</string>
+    <string name="addTaskDialog">Add a task</string>
+    <string name="addTaskDialogMessage">What do you want to do?</string>
+    <string name="menuAddTaskTitle">Add Task</string>
 </resources>
