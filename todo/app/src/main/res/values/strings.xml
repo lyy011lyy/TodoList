@@ -8,4 +8,5 @@
     <string name="addTaskDialog">Add a task</string>
     <string name="addTaskDialogMessage">What do you want to do?</string>
     <string name="menuAddTaskTitle">Add Task</string>
+    <string name="button_delete">Delete</string>
 </resources>

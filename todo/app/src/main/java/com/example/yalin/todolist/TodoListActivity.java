@@ -3,6 +3,7 @@ package com.example.yalin.todolist;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -27,11 +34,47 @@ import java.util.List;
 public class TodoListActivity extends ActionBarActivity {
     private TaskDBHelper helper;
     private ListAdapter listAdapter;
+    private TodoListActivity mActivity;
+    private ListView listView = (ListView) findViewById(R.id.list);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
         updateUI();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Adapter adapter = parent.getAdapter();
+
+                Animation fadeOut = new AlphaAnimation(1, 0);
+                //Animation fadeOut = AnimationUtils.loadAnimation(TodoListActivity.this, R.anim.fade_out_anim);
+                fadeOut.setInterpolator(new AccelerateInterpolator());
+                fadeOut.setDuration(500);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //adapter.pointItems.remove(position);
+                        //adapter.notifyDataSetChanged();
+                        listView.removeViewAt(position);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                view.startAnimation(fadeOut);
+
+            }
+
+        });
     }
 
     private void updateUI() {
@@ -49,8 +92,12 @@ public class TodoListActivity extends ActionBarActivity {
                 new int[] {R.id.taskTextView},
                 0
         );
-        //Display the list view
-        ListView listView = (ListView) findViewById(R.id.list);
+//        //Display the list view
+
+//
+
+
+
         listView.setAdapter(listAdapter);
     }
 
