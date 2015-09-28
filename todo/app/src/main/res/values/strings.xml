@@ -9,4 +9,5 @@
     <string name="addTaskDialogMessage">What do you want to do?</string>
     <string name="menuAddTaskTitle">Add Task</string>
     <string name="button_delete">Delete</string>
+    <string name="textView1">TextView</string>
 </resources>

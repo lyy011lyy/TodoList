@@ -1,6 +1,7 @@
 package com.example.yalin.todolist.presenter;
 
 import android.content.Context;
+import android.gesture.GestureOverlayView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -9,7 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.example.yalin.todolist.R;
 
@@ -109,6 +112,40 @@ public class MyListView extends ListView implements OnTouchListener,OnGestureLis
 
         if(!isDeletedShow && Math.abs(velocityX) > Math.abs(velocityY)) {
             btnDelete = LayoutInflater.from(getContext()).inflate(R.layout.layout_button,null);
+            btnDelete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewGroup.removeView(btnDelete);
+                    btnDelete = null;
+                    isDeletedShow = false;
+                    onItemDeleteListener.onItemDelete(seletcedItem);
+                }
+            });
+
+            viewGroup = (ViewGroup)getChildAt(seletcedItem - getFirstVisiblePosition());
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            btnDelete.setLayoutParams(layoutParams);
+            viewGroup.addView(btnDelete);
+            isDeletedShow = true;
+        }else{
+            setOnTouchListener(this);
         }
+
+        return false;
+    }
+
+    public interface OnItemDeleteListener{
+        public void onItemDelete(int seletedItem);
+    }
+
+    private void btnShow(View v) {
+        v.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.btn_show));
+    }
+
+    private void btnHide(View v) {
+        v.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.btn_hide));
     }
 }
