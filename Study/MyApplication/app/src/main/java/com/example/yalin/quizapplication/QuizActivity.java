@@ -1,5 +1,6 @@
 package com.example.yalin.quizapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mNextButton;
     private ImageButton mPrevButton;
     private TextView mQuestionTextView;
+    private Button mCheatButton;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
             new TrueFalse(R.string.question_oceans, true),
@@ -36,7 +38,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate(bundle) called");
+        Log.d(TAG, "onCreate(bundle) called");
         setContentView(R.layout.activity_quiz);
         //mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
 
@@ -60,6 +62,18 @@ public class QuizActivity extends AppCompatActivity {
                checkAnswer(false);
             }
         });
+
+        mCheatButton = (Button)findViewById(R.id.cheat_button);
+        mCheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Start cheat activity;
+                Intent i = new Intent(QuizActivity.this, CheatActivity.class);
+                startActivity(i);
+            }
+        });
+
+
 
         mNextButton = (Button)findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
