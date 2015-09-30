@@ -20,6 +20,7 @@ public class QuizActivity extends AppCompatActivity {
     private ImageButton mPrevButton;
     private TextView mQuestionTextView;
     private Button mCheatButton;
+    private boolean mIsCheater;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
             new TrueFalse(R.string.question_oceans, true),
@@ -40,7 +41,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(bundle) called");
         setContentView(R.layout.activity_quiz);
-        //mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
+        mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
@@ -69,7 +70,9 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Start cheat activity;
                 Intent i = new Intent(QuizActivity.this, CheatActivity.class);
-                startActivity(i);
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
+                i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue);
+                startActivityForResult(i, 0);
             }
         });
 
@@ -80,6 +83,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                mIsCheater = false;
                 updateQuestion();
             }
         });
@@ -157,6 +161,15 @@ public class QuizActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+        mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        //super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void updateQuestion() {
         int question = mQuestionBank[Math.abs(mCurrentIndex)].getQuestion();
         mQuestionTextView.setText(question);
@@ -167,10 +180,14 @@ public class QuizActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (userPressedTrue == answerIsTrue) {
-            messageResId = R.string.correct_toast;
+        if (mIsCheater) {
+            messageResId = R.string.judgment_toast;
         } else {
-            messageResId = R.string.incorrect_toast;
+            if (userPressedTrue == answerIsTrue) {
+                messageResId = R.string.correct_toast;
+            } else {
+                messageResId = R.string.incorrect_toast;
+            }
         }
 
         Toast.makeText(this,messageResId, Toast.LENGTH_SHORT).show();
