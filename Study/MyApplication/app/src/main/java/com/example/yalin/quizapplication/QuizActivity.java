@@ -1,6 +1,10 @@
 package com.example.yalin.quizapplication;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +25,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private Button mCheatButton;
     private boolean mIsCheater;
+    private TextView mAPIVersion;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[]{
             new TrueFalse(R.string.question_oceans, true),
@@ -33,15 +38,25 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final int API_VERSION = Build.VERSION.SDK_INT;
 
 
 
+    @TargetApi(11)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(bundle) called");
         setContentView(R.layout.activity_quiz);
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
+
+        mAPIVersion = (TextView)findViewById(R.id.API_version);
+        mAPIVersion.setText("Current API level: " + API_VERSION);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            ActionBar actionBar = getActionBar();
+//            actionBar.setSubtitle("TFFTT");
+//        }
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
