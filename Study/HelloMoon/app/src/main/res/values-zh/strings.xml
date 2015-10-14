@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">你好 月亮</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="menu_settings">设置</string>
+  <string name="hellomoon_play">播放</string>
+  <string name="hellomoon_stop">停止</string>
+  <string name="hellomoon_image_description">Neil Armstrong 正在月球上行走</string>
+</resources>
