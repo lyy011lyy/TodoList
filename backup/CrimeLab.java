@@ -1,12 +1,14 @@
 package com.example.yalin.criminalintent;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
-import android.content.Context;
-
-import android.util.Log;
-
+/**
+ * Created by yalin on 10/7/2015.
+ */
 public class CrimeLab {
     private static final String TAG = "CrimeLab";
     private static final String FILENAME = "crimes.json";
@@ -17,8 +19,8 @@ public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private Context mAppContext;
 
-    private CrimeLab(Context appContext) {
-        mAppContext = appContext;
+    private CrimeLab(Context AppContext) {
+        mAppContext = AppContext;
         mSerializer = new CriminalIntentJSONSerializer(mAppContext, FILENAME);
 
         try {
@@ -27,6 +29,7 @@ public class CrimeLab {
             mCrimes = new ArrayList<Crime>();
             Log.e(TAG, "Error loading crimes: ", e);
         }
+
     }
 
     public static CrimeLab get(Context c) {
@@ -36,26 +39,23 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
+    }
+
+    public void deleteCrime(Crime c) {
+        mCrimes.remove(c);
+    }
+    public ArrayList<Crime> getCtimes() {
+        return mCrimes;
+    }
+
     public Crime getCrime(UUID id) {
         for (Crime c : mCrimes) {
             if (c.getId().equals(id))
                 return c;
         }
         return null;
-    }
-    
-    public void addCrime(Crime c) {
-        mCrimes.add(c);
-        saveCrimes();
-    }
-
-    public ArrayList<Crime> getCrimes() {
-        return mCrimes;
-    }
-
-    public void deleteCrime(Crime c) {
-        mCrimes.remove(c);
-        saveCrimes();
     }
 
     public boolean saveCrimes() {
@@ -64,9 +64,8 @@ public class CrimeLab {
             Log.d(TAG, "crimes saved to file");
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "Error saving crimes: " + e);
+            Log.e(TAG, "Error saving crimes: ", e);
             return false;
         }
     }
 }
-

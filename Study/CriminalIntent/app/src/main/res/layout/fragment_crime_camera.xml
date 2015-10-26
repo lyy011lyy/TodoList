@@ -24,7 +24,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/crime_camera_prograssContainer"
+        android:id="@+id/crime_camera_progressContainer"
         android:clickable="true">
 
         <ProgressBar
