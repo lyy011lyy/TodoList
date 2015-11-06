@@ -20,10 +20,14 @@ import java.util.ArrayList;
  */
 public class FlickrFetchr {
     public static final String TAG = "FlickrFetchr";
+
+    public static final String PREF_SEARCH_QUERY = "searchQuery";
     public static final String ENDPOINT = "https://api.flickr.com/services/rest/";
     public static final String API_KEY = "f52aa08dbba713e9d1b20aaaa2ddb47f";
     public static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
+    public static final String METHOD_GET_SEARCH = "flickr.photos.search";
     public static final String PARAM_EXTRAS = "extras";
+    public static final String PARAM_TEXT = "text";
     public static final String EXTRA_SMALL_URL = "url_s";
 
     private static final String XML_PHOTO = "photo";
@@ -56,15 +60,10 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public ArrayList<GalleryItem> fetchItems() {
+    public ArrayList<GalleryItem> downloadGallaryItems(String url) {
         ArrayList<GalleryItem> items = new ArrayList<GalleryItem>();
 
         try {
-            String url = Uri.parse(ENDPOINT).buildUpon()
-                    .appendQueryParameter("method",METHOD_GET_RECENT)
-                    .appendQueryParameter("api_key",API_KEY)
-                    .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
-                    .build().toString();
             String xmlString = getUrl(url);
             Log.i(TAG, "Received xml: " + xmlString);
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -78,6 +77,25 @@ public class FlickrFetchr {
             Log.e(TAG, "Failed to parse items", xppe);
         }
         return items;
+    }
+
+    public ArrayList<GalleryItem> fetchItems() {
+        String url = Uri.parse(ENDPOINT).buildUpon()
+                .appendQueryParameter("method",METHOD_GET_RECENT)
+                .appendQueryParameter("api_key",API_KEY)
+                .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
+                .build().toString();
+        return downloadGallaryItems(url);
+    }
+
+    public ArrayList<GalleryItem> search(String query) {
+        String url = Uri.parse(ENDPOINT).buildUpon()
+                .appendQueryParameter("method",METHOD_GET_SEARCH)
+                .appendQueryParameter("api_key",API_KEY)
+                .appendQueryParameter(PARAM_EXTRAS, EXTRA_SMALL_URL)
+                .appendQueryParameter(PARAM_TEXT, query)
+                .build().toString();
+        return downloadGallaryItems(url);
     }
 
     void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser)
